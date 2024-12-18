@@ -2299,11 +2299,16 @@ function pow_rmul(a::MPoly{T}, b::Int) where {T <: RingElement}
    elseif b == 0
       return one(a)
    end
-   z = deepcopy(a)
-   for i = 2:b
-      z = mul!(z, z, a)
+   c = digits(b, base=2) |> reverse
+   result = one(a)
+   f = a
+   for i in c
+     if i == 1
+       result = result * f
+     end
+     f = f*f
    end
-   return z
+   return result
 end
 
 function ^(a::MPoly{T}, b::Int) where {T <: RingElement}
